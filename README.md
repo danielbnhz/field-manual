@@ -256,29 +256,21 @@ Gradle build succeeds
 Git repository initialized
     ↓
 Baseline pushed to GitHub
-```
+```#### Milestone 1 acceptance criteria
 
-### Milestone 1 — Static library screen
+Milestone 1 is complete when:
 
-**Current focus**
+1. The application builds and launches successfully from Android Studio.
+2. Launching the app opens directly to the Field Manual library screen.
+3. The screen renders at least five hard-coded local `ManualDocument` entries.
+4. Each entry presents a readable title, source, and one or more tags.
+5. The document collection is vertically scrollable on a typical phone-sized screen.
+6. The screen uses no network requests, account system, database, file import,
+   cloud synchronization, or persistent bookmark behavior.
+7. The completed increment is manually tested and committed to Git.
 
-Create a clean, readable local library screen containing a few hard-coded
-sample documents.
-
-```text
-ManualDocument model
-    ↓
-Local sample document list
-    ↓
-Scrollable library UI
-    ↓
-Document title, tags, and source
-    ↓
-Successful device build
-```
-
-This milestone does not require persistence, importing, document
-rendering, search behavior, accounts, or networking.
+Milestone 1 intentionally does not open documents, import files, persist
+state, or provide search. It establishes the local library interface first.
 
 ### Milestone 2 — Library interaction
 
