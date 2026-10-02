@@ -247,145 +247,194 @@ foundation, not the final content-storage system.
 **Status: complete**
 
 ```text
-Android Studio project created
-    ↓
-Kotlin and Jetpack Compose configured
-    ↓
-Gradle build succeeds
-    ↓
-Git repository initialized
-    ↓
-Baseline pushed to GitHub
-```#### Milestone 1 acceptance criteria
+# Field Manual
 
-Milestone 1 is complete when:
+> A local-first Android reference library for keeping personally selected
+> documents organized, readable, and available without requiring a network
+> connection, account, subscription, or cloud service.
 
-1. The application builds and launches successfully from Android Studio.
-2. Launching the app opens directly to the Field Manual library screen.
-3. The screen renders at least five hard-coded local `ManualDocument` entries.
-4. Each entry presents a readable title, source, and one or more tags.
-5. The document collection is vertically scrollable on a typical phone-sized screen.
-6. The screen uses no network requests, account system, database, file import,
-   cloud synchronization, or persistent bookmark behavior.
-7. The completed increment is manually tested and committed to Git.
+Field Manual is a native Android application built with Kotlin and
+Jetpack Compose.
 
-Milestone 1 intentionally does not open documents, import files, persist
-state, or provide search. It establishes the local library interface first.
+Its immediate purpose is simple:
 
-### Milestone 2 — Library interaction
+> Keep useful reference text on the device, present it as a clear local
+> library, and allow the user to read it while offline.
 
-Add small interactions that work entirely in memory.
-
-Potential work:
-
-- Search and filtering across titles, tags, and sources.
-- A deliberate empty-state message.
-- In-memory bookmark toggling.
-- Basic document-detail navigation.
-- Better phone and tablet layout behavior.
-
-At this stage, interaction matters more than storage permanence.
-
-### Milestone 3 — Durable local library
-
-Add persistence only when the static/in-memory screen has proven what
-needs to be stored.
-
-Potential work:
-
-- Local structured storage for document metadata.
-- Persistent bookmarks.
-- A clear distinction between bundled sample content and user content.
-- Application restart behavior.
-- Local backup/export design.
-
-A Room database may be appropriate here for document records and
-bookmarks. The decision should follow the actual data requirements, not
-arrive as premature architecture.
-
-### Milestone 4 — Real content support
-
-Allow Field Manual to contain material beyond hard-coded sample entries.
-
-Potential work:
-
-- Import selected files.
-- Support a defined initial content format.
-- Render Markdown or another deliberately selected format.
-- Launch compatible external viewers for documents such as PDFs.
-- Preserve source and import metadata.
-- Add document-detail views.
-
-Content support should be introduced one format at a time.
-
-### Milestone 5 — Larger-screen field use
-
-Refine the application for tablets and practical reading.
-
-Potential work:
-
-- Responsive layouts.
-- A two-pane library-and-detail view on suitable screens.
-- Larger touch targets.
-- Better typography for prolonged reading.
-- Accessibility review.
-- Orientation and offline-use testing.
-
-### Milestone 6 — Optional extensions
-
-Only after the local library is solid should Field Manual consider
-optional additions such as:
-
-- Deliberate cloud synchronization.
-- RSS or selected-source updates.
-- Device sensor integrations.
-- AI-assisted metadata, tagging, summaries, or local search.
-- Carefully sourced specialist collections.
-
-These features must extend the local-first core rather than replace it.
+The application begins with bundled demonstration manuals and grows one
+working layer at a time. It does not begin by assuming a remote service,
+user account, cloud synchronization, or permanent connectivity.
 
 ---
 
-## Explicit deferrals
+## Current capability
 
-The following are intentionally **not** part of the first library
-screen:
-
-| Deferred capability | Why it waits |
-|---|---|
-| File import | Requires a clear content policy, format decision, metadata handling, and error states |
-| Markdown rendering | Requires an intentional renderer, styling policy, and link/security behavior |
-| PDF opening | Requires a choice between an in-app viewer and a compatible external viewer |
-| Room database | The first static screen does not yet prove the final persistent data shape |
-| Cloud sync | Local ownership, export, conflict behavior, and privacy expectations come first |
-| RSS | A source-selection and update policy should exist before adding network retrieval |
-| Sensors | Must correspond to a real field-use case rather than exist as a novelty |
-| AI features | Must be optional, attributable, constrained, and clearly separated from source material |
-| Emergency-alert claims | Requires official integrations, jurisdictional scope, reliability guarantees, and careful safety review |
-
-Deferral does not mean rejection.
-
-It means a capability must earn its complexity by following a stable,
-working foundation.
-
----
-
-## Architecture direction
-
-Field Manual begins small and should remain understandable.
+Field Manual currently provides a complete local reading loop:
 
 ```text
-User action
+Bundled .txt file in app assets
     ↓
-Compose screen
+ManualDocument metadata links to the asset path
     ↓
-Screen state and application logic
+Field Manual library displays document cards
     ↓
-Document repository
+User selects a document card
     ↓
-Local data source
+Android AssetManager opens the local text asset
     ↓
-Persistent storage or local files
+Kotlin reads the file into a String
+    ↓
+Jetpack Compose displays the document in a scrollable reader
+    ↓
+Back returns the user to the local library
+```
+
+The current application requires:
+
+```text
+No account
+No network request
+No cloud service
+No subscription
+No storage permission
+No external server
+```
+
+This is a deliberately small, local-first foundation.
+
+---
+
+## Project stance
+
+Field Manual is designed around a practical constraint:
+
+> Reference material should remain available when connectivity is absent,
+> unreliable, expensive, unwanted, or irrelevant.
+
+A modern application does not need to make core information conditional
+on a remote service.
+
+```text
+No network
+    ≠
+No application
+```
+
+The device belongs to the user. Locally packaged or later user-imported
+material should remain accessible because it is present on the device,
+not because a server remains available.
+
+---
+
+## Current feature flow
+
+The current user-facing flow is:
+
+```text
+Launch application
+    ↓
+View Field Manual library
+    ↓
+Scroll local document cards
+    ↓
+Tap a document
+    ↓
+Read its bundled .txt file
+    ↓
+Scroll document text
+    ↓
+Tap Back
+    ↓
+Return to library
+```
+
+Each bundled manual is represented by `ManualDocument` metadata:
+
+```kotlin
+data class ManualDocument(
+    val id: String,
+    val title: String,
+    val tags: List<String>,
+    val source: String,
+    val assetPath: String,
+)
+```
+
+The metadata is separate from document content.
+
+```text
+ManualDocument
+    ├─ id
+    ├─ title
+    ├─ tags
+    ├─ source
+    └─ assetPath
+            ↓
+assets/manuals/<document>.txt
+            ↓
+Document body text
+```
+
+This separation makes it possible to display a fast library list without
+loading every document body at launch.
+
+---
+
+## Current architecture
+
+```text
+MainActivity
+    ↓
+FieldManualTheme
+    ↓
+ManualLibraryScreen
+    ├─ selectedDocument == null
+    │      ↓
+    │   ManualDocumentList
+    │      ↓
+    │   ManualDocumentItem
+    │      ↓
+    │   User taps a card
+    │
+    └─ selectedDocument != null
+           ↓
+        AssetManualReader
+           ↓
+        Android AssetManager
+           ↓
+        assets/manuals/<file>.txt
+           ↓
+        ManualReaderScreen
+           ↓
+        Scrollable Compose Text
+```
+
+The app uses a small in-memory selection state rather than a navigation
+library during this early stage:
+
+```text
+No selected document
+    → show library
+
+Selected document exists
+    → show reader
+
+Back pressed
+    → clear selected document
+    → show library
+```
+
+This keeps the first working reader flow understandable before adding
+navigation graphs, ViewModels, databases, or persistence.
+
+---
+
+## Package layout
+
+```text
+app/src/main/
+├── assets/
+│   └──
 ```
 
 The first milestone uses only the top portion:
