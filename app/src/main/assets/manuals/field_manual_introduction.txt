@@ -1,0 +1,9 @@
+ FIELD MANUAL — INTRODUCTION
+
+ This is bundled demonstration material.
+
+ Field Manual is designed to keep personally selected reference
+ documents available locally, even when network access is unavailable.
+
+ This sample is for testing the reader screen. It is not emergency,
+ medical, legal, or professional guidance.

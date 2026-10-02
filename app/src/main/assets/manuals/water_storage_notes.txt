@@ -1,0 +1,9 @@
+WATER STORAGE NOTES
+
+This is bundled demonstration content for the Field Manual reader.
+
+It exists to prove that the app can open and display local text files
+without a network connection, account, or storage permission.
+
+This document is not verified emergency, medical, legal, or professional
+guidance.

@@ -11,14 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
- import com.patron.fieldmanual.data.ManualDocument
+import com.patron.fieldmanual.data.ManualDocument
 
 @Composable
 fun ManualDocumentItem(
     document: ManualDocument,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
+        onClick = onClick,
         modifier = modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp,
