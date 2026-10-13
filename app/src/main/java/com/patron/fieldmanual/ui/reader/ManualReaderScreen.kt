@@ -15,12 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-import com.patron.fieldmanual.data.ManualDocument
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManualReaderScreen(
-    document: ManualDocument,
+    title: String,
     documentText: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
@@ -30,7 +29,7 @@ fun ManualReaderScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(document.title)
+                    Text(title)
                 },
                 navigationIcon = {
                     TextButton(
