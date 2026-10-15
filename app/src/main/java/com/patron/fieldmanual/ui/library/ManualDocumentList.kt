@@ -8,12 +8,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.patron.fieldmanual.data.DocumentLocation
 import com.patron.fieldmanual.data.ManualDocument
 
 @Composable
 fun ManualDocumentList(
     documents: List<ManualDocument>,
     onDocumentClick: (ManualDocument) -> Unit,
+    onEditDescription: (ManualDocument) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -30,6 +32,9 @@ fun ManualDocumentList(
                 onClick = {
                     onDocumentClick(document)
                 },
+                onEditDescription = if (document.location is DocumentLocation.External) {
+                    { onEditDescription(document) }
+                } else null,
             )
         }
     }

@@ -20,7 +20,7 @@ object ExternalTextReader {
         return OpenedFile(title = displayName(context, uri), text = text)
     }
 
-    private fun displayName(context: Context, uri: Uri): String {
+    public fun displayName(context: Context, uri: Uri): String {
         context.contentResolver.query(
             uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null
         )?.use { cursor ->
