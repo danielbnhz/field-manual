@@ -479,9 +479,30 @@ Built one dependable layer at a time.
 
 ## Status and scope
 
-Field Manual is an early project under active construction.
+Field Manual: status
 
-The project will change as the first real screen reveals what the
-application actually needs. This README records the direction and
-constraints that should remain stable while implementation details
-evolve.
+What it is. An offline-first Android field notes app in Kotlin and Jetpack Compose, with no account and no cloud. It’s also the project where you’re learning Kotlin, coming from Java, C++, JavaScript, and Python.
+
+What works now
+
+Builds cleanly and launches well in the emulator.
+Reads the txt files bundled inside the app (hardcoded).
+Has an “Open file” button that uses the system file picker, and opening an external txt file works. That’s committed.
+
+What’s missing
+
+The index only covers the files you’ve selected, plus the hardcoded ones. It doesn’t pick up everything.
+The index is static. It isn’t rebuilt when files are added or changed.
+
+Next steps
+
+Ingest all txt files. Decide where the app looks (the bundled assets, a folder the user picks, or both). On modern Android, the practical route is the Storage Access Framework: have the user grant access to a folder once, persist that permission, and walk the files in it.
+Dynamic indexing. Rebuild or update the index when the set of files changes, such as on app launch, after a new file is opened, or on a manual refresh button. Do it off the main thread with coroutines so a large folder doesn’t freeze the UI.
+Persist the index. Store it in Room (SQLite) or a simple file so you aren’t rescanning everything every launch. This also makes search fast, and it fits the offline-first idea.
+
+Risks to watch
+
+Scoped storage limits which folders you can read, so the folder-grant approach matters.
+Big or oddly encoded text files (non-UTF-8) can break a naive reader.
+
+Want me to sketch the Kotlin for the folder scan and incremental index update?
